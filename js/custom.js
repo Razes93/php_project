@@ -47,6 +47,26 @@ $(document).ready(function(){
     //     }
 
     //  });
+    $(document).on('click','.updateQTY',function(){
+        var prod_id =$(this).closest('.qty-item').find('.proID').val();
+
+        var qty = $(this).closest('.qty-item').find('.qtyPro').val();
+
+        
+        $.ajax({
+            method:"POST",
+            url:"cart.php",
+            data:{
+                "prod_id":prod_id,
+                "qty":qty,
+                "action": "update"
+             },
+            success: function(res){
+                alert("thành công");
+                location.reload(); 
+            }
+        })
+    });
  /*==============================================================
  
 // toggler js

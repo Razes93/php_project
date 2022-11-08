@@ -92,7 +92,7 @@
     <!-- jquery -->
     <script src="js/modernizr-2.8.3.min.js"></script>
     <script src="js/jquery-3.6.0.min.js"></script>
-    <script src="js/jquery-3.4.1.js"></script>
+    <!-- <script src="js/jquery-3.4.1.js"></script> -->
     <!-- bootstrap -->
     <script src="js/bootstrap.min.js"></script>
     <!-- popper -->
