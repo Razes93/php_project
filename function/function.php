@@ -76,9 +76,7 @@ function total_price()
 
 	$total = 0;
 
-	$ip = get_ip();
-
-	$run_cart = mysqli_query($con, "select * from cart where ip_address='$ip' ");
+	$run_cart = mysqli_query($con, "select * from cart ");
 
 	while ($fetch_cart = mysqli_fetch_array($run_cart)) {
 
@@ -133,19 +131,7 @@ function total_items_wishlist()
 
 	echo $count_items = mysqli_num_rows($run_items);
 }
-function get_ip()
-{
-	if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-		//ip from share internet
-		$ip = $_SERVER['HTTP_CLIENT_IP'];
-	} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-		//ip pass from proxy
-		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	} else {
-		$ip = $_SERVER['REMOTE_ADDR'];
-	}
-	return $ip;
-}
+
 
 function getCats()
 {
@@ -235,14 +221,54 @@ function getBrands_Menu()
 		";
 	}
 };
+function getCount()
+{
+	global $con;
+	if (isset($_GET['cat'])) {
+		$cat_id = $_GET['cat'];
+
+		$get_cat_pro = "select * from product where cat_id='$cat_id'";
+
+		$run_cat_pro = mysqli_query($con, $get_cat_pro);
+
+		$count_cats = mysqli_num_rows($run_cat_pro);
+		unset($_SESSION['total']);
+		$_SESSION['total'] = $count_cats;
+	} elseif (isset($_GET['brand'])) {
+		$brand_id = $_GET['brand'];
+
+		$get_brand_pro = "select * from product where brand_id='$brand_id'";
+
+		$run_brand_pro = mysqli_query($con, $get_brand_pro);
+
+		$count_brands = mysqli_num_rows($run_brand_pro);
+		unset($_SESSION['total']);
+		$_SESSION['total'] = $count_brands;
+	} elseif (isset($_GET['search'])) {
+	} else {
+		$get_count_pro = " select * from product";
+
+		$run_count_pro = mysqli_query($con, $get_count_pro);
+		$count_items = mysqli_num_rows($run_count_pro);
+		unset($_SESSION['total']);
+		$_SESSION['total'] = $count_items;
+	}
+}
 function getPro()
 {
 	if (!isset($_GET['cat'])) {
 		if (!isset($_GET['brand'])) {
 
 			global $con;
+			$total = $_SESSION['total'] / 8;
+			$total = ceil($total);
+			$current_page = 1;
+			if (isset($_GET['page'])) {
+				$current_page = $_GET['page'];
+			}
+			$start = ($current_page - 1) * 8;
 
-			$get_pro = " select * from product order by RAND()";
+			$get_pro = " select * from product LIMIT " . $start . ",8";
 
 			$run_pro = mysqli_query($con, $get_pro);
 
@@ -290,7 +316,6 @@ function get_pro_search()
 		$search_query = $_GET['search'];
 		if (empty($search_query)) {
 			echo "<script>alert('Please enter the keyword you want to search!')</script>";
-			echo "<script>window.location.replace('grid-list.php')</script>";
 		}
 		$run_query_by_pro = mysqli_query($con, "select * from product where product_title like '%$search_query%' ");
 		$count_pro = mysqli_num_rows($run_query_by_pro);
@@ -339,7 +364,7 @@ function get_pro_search()
 				$get_cat_pro = "select * from product where cat_id='$row_cat_id' ";
 
 				$run_query_by_cat_id = mysqli_query($con, $get_cat_pro);
-				
+
 				while ($row_cat = mysqli_fetch_array($run_query_by_cat_id)) {
 					$pro_id = $row_cat['product_id'];
 					$pro_title = $row_cat['product_title'];
@@ -366,7 +391,6 @@ function get_pro_search()
 					</div>
 					";
 				}
-				
 			}
 		}
 	}
@@ -379,23 +403,24 @@ function get_pro_by_cat_id()
 
 	if (isset($_GET['cat'])) {
 		$cat_id = $_GET['cat'];
-
-		$get_cat_pro = "select * from product where cat_id='$cat_id' LIMIT 1,4 ";
+		$total = $_SESSION['total'] / 8;
+		$total = ceil($total);
+		$current_page = 1;
+		if (isset($_GET['page'])) {
+			$current_page = $_GET['page'];
+		}
+		$start = ($current_page - 1) * 8;
+		$get_cat_pro = "select * from product where cat_id='$cat_id' LIMIT " . $start . ",8";
 
 		$run_cat_pro = mysqli_query($con, $get_cat_pro);
 
-		$count_cats = mysqli_num_rows($run_cat_pro);
-
-		if ($count_cats == 0) {
+		if ($_SESSION['total'] == 0) {
 			echo "<script>alert('No products where found in this category!')</script>";
 			echo "<script>window.location.replace('grid-list.php')</script>";
 		}
-
 		while ($row_cat_pro = mysqli_fetch_array($run_cat_pro)) {
 			$pro_id = $row_cat_pro['product_id'];
-
 			$pro_cat = $row_cat_pro['cat_id'];
-
 			$pro_brand = $row_cat_pro['brand_id'];
 			$pro_title = $row_cat_pro['product_title'];
 			$pro_price = number_format($row_cat_pro['product_price'], 0, ",", ".");
@@ -433,14 +458,21 @@ function get_pro_by_brand_id()
 
 	if (isset($_GET['brand'])) {
 		$brand_id = $_GET['brand'];
+		$total = $_SESSION['total'] / 8;
+		$total = ceil($total);
+		$current_page = 1;
+		if (isset($_GET['page'])) {
+			$current_page = $_GET['page'];
+		}
+		$start = ($current_page - 1) * 8;
 
-		$get_brand_pro = "select * from product where brand_id='$brand_id' LIMIT 1,4";
+		$get_brand_pro = "select * from product where brand_id='$brand_id' LIMIT " . $start . ",8";
 
 		$run_brand_pro = mysqli_query($con, $get_brand_pro);
 
 		$count_brands = mysqli_num_rows($run_brand_pro);
 
-		if ($count_brands == 0) {
+		if ($_SESSION['total'] == 0) {
 			echo "<script>alert('No products where found in this brand!')</script>";
 			echo "<script>window.location.replace('grid-list.php')</script>";
 		}
@@ -482,24 +514,21 @@ function get_pro_by_brand_id()
 }
 function pagination()
 {
-	global $con;
-	if (isset($_GET['page'])) {
-		$page = $_GET['page'];
+	$uri = $_SERVER['REQUEST_URI'];
+	$total = $_SESSION['total'] / 8;
+	$total = ceil($total);
+	if (isset($_GET['cat'])) {
+		for ($i = 1; $i <= $total; $i++) {
+			echo ' <a id="page" class="" href="' . $uri . '&page=' . $i . '" value="' . $i . '">' . $i . '</a>';
+		}
+	} elseif (isset($_GET['brand'])) {
+		for ($i = 1; $i <= $total; $i++) {
+			echo ' <a id="page" class="" href="' . $uri . '&page=' . $i . '" value="' . $i . '">' . $i . '</a>';
+		}
 	} else {
-		$page = 1;
-	}
-	$page = $page - 1;
-	$limit = 8;
-	$start = $limit * $page;
-	if (isset($_GET['brand'])) {
-		$brand_id = $_GET['brand'];
-
-		$get_brand_pro = "select * from product where brand_id='$brand_id'";
-
-		$run_brand_pro = mysqli_query($con, $get_brand_pro);
-		$total = mysqli_num_rows($run_brand_pro);
-		$total = $total / $limit;
-		$total = ceil($total);
+		for ($i = 1; $i <= $total; $i++) {
+			echo ' <a id="page" class="" href="?page=' . $i . '" value="' . $i . '">' . $i . '</a>';
+		}
 	}
 }
 

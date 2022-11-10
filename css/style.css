@@ -5323,9 +5323,11 @@ a.scroll:hover span{
 .list-all-page .page-number a{
     position: relative;
     margin-right: 5px;
+    border: 1px solid;
+    width: 30px;
 }
 .list-all-page .page-number a:after{
-    background-color: #f5ab1e;
+    /* background-color: #f5ab1e; */
     content: "";
     position: absolute;
     bottom: 0px;

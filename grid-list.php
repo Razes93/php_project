@@ -109,9 +109,10 @@ include("includes/header.php")
                 </div>
             </div>
             <div class="col-lg-9 col-md-8 col-12">
-            <?php cart(); wishlist();?>
+                <?php cart();
+                wishlist(); ?>
                 <div class="grid-4-product">
-                    <div class="grid-list-select">
+                    <!-- <div class="grid-list-select">
                         <ul class="grid-list">
 
                         </ul>
@@ -130,24 +131,23 @@ include("includes/header.php")
                                 </select>
                             </li>
                         </ul>
-                    </div>
+                    </div> -->
                     <div class="grid-pro">
                         <ul class="grid-product">
                             <?php
-                                getPro();
-                                get_pro_by_cat_id();
-                                get_pro_by_brand_id();
+                            getCount();
+                            getPro();
+                            get_pro_by_cat_id();
+                            get_pro_by_brand_id();
                             ?>
                         </ul>
                     </div>
                 </div>
+
                 <div class="list-all-page">
-                    <span class="page-title">Showing 1 - 17 of 17 result</span>
                     <div class="page-number">
-                        <a href="grid-list.php" class="active">1</a>
-                        <a href="grid-list-2.php">2</a>
-                        <a href="grid-list-3.php">3</a>
-                        <a href="grid-list-4.php">4</a>
+                        <a href="javascript:void(0)"><i class="fa fa-angle-double-left"></i></a>
+                        <?php pagination(); ?>
                         <a href="javascript:void(0)"><i class="fa fa-angle-double-right"></i></a>
                     </div>
                 </div>
@@ -155,6 +155,9 @@ include("includes/header.php")
         </div>
     </div>
 </section>
+
+
+
 <!-- grid-list start -->
 <?php
 include("includes/footer.php");

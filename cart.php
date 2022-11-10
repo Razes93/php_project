@@ -24,7 +24,6 @@ include("includes/header.php")
 
                 <?php
                 if (!isset($_SESSION['user_id'])) {
-                    echo "<script>alert('Must login!')</script>";
                     echo "<script>window.open('login.php','_self')</script>";
                 } else {
                     $user_id = $_SESSION['user_id'];
@@ -138,6 +137,15 @@ include("includes/header.php")
                     echo "<script>window.open('cart.php','_self')</script>";
                 }
             }
+        }
+        if(isset($_POST['checkout'])){
+            unset($_SESSION['array_id']);
+            if (isset($_POST['del'])) {
+                foreach ($_POST['del'] as $array_pro_id) {
+                    $_SESSION['array_id'][] = $array_pro_id;
+                }
+            }
+            echo "<script>window.open('checkout.php','_self')</script>";
         }
 
         if (isset($_POST['action'])) {

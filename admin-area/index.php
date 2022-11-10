@@ -116,9 +116,9 @@ include("../function/db.php");
                             include('includes/add_pro.php');
                             break;
 
-                        // default;
-                        //     include('../admin-area/includes/dashboard.php');
-                        //     break;
+                        default;
+                            include('../admin-area/includes/dashboard.php');
+                            break;
                     }
                     ?>
                 </div>
